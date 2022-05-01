@@ -81,6 +81,8 @@ def restart(update, context):
         proc.kill()
     procs.kill()
     clean_all()
+    srun(["pkill", "-f", "aria2c"])
+    srun(["pkill", "-f", "megasdkrest"])
     srun(["python3", "update.py"])
     a2cproc = psprocess(a2c.pid)
     for proc in a2cproc.children(recursive=True):
