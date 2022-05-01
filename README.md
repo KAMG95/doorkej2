@@ -23,7 +23,7 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 - Mirror/Leech/Watch/Clone/Count/Del by reply
 - YT-DLP quality buttons
 - Search for torrents with Torrent Search API or with variable plugins using qBittorrent search engine
-- Docker image support for `linux/amd64, linux/arm64, linux/arm/v7, linux/arm/v6` (**Note**: Use `anasty17/mltb-oracle:latest` for oracle or if u faced problem with arm64 docker run)
+
 - Update bot at startup and with restart command using `UPSTREAM_REPO`
 - Qbittorrent seed until reaching specific ratio or time
 - Rss feed and filter. Based on this repository [rss-chan](https://github.com/hyPnOtICDo0g/rss-chan)
@@ -32,7 +32,7 @@ This is a Telegram Bot written in Python for mirroring files on the Internet to 
 
 ## From Other Repositories
 - Mirror direct download links, Torrent, and Telegram files to Google Drive
-- Mirror Mega.nz links to Google Drive (If you have non-premium Mega account, it will limit download to 5GB per 6 hours)
+-  Mirror Mega.nz links to Google Drive
 - Copy files from someone's Drive to your Drive (Using Autorclone)
 - Download/Upload progress, Speeds and ETAs
 - Mirror all yt-dlp supported links
@@ -129,8 +129,6 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `MEGA_API_KEY`: Mega.nz API key to mirror mega.nz links. Get it from [Mega SDK Page](https://mega.nz/sdk)
 - `MEGA_EMAIL_ID`: E-Mail ID used to sign up on mega.nz for using premium account (Leave though)
 - `MEGA_PASSWORD`: Password for mega.nz account
-- `BLOCK_MEGA_FOLDER`: If you want to remove mega.nz folder support, set it to `True`. `Bool`
-- `BLOCK_MEGA_LINKS`: If you want to remove mega.nz mirror support, set it to `True`. `Bool`
 - `STOP_DUPLICATE`: (Leave empty if unsure) if this field is set to `True`, bot will check file in Drive, if it is present in Drive, downloading or cloning will be stopped. (**NOTE**: File will be checked using filename not file hash, so this feature is not perfect yet). `Bool`
 - `CLONE_LIMIT`: To limit the size of Google Drive folder/file which you can clone. Don't add unit, the default unit is `GB`.
 - `MEGA_LIMIT`: To limit the size of Mega download. Don't add unit, the default unit is `GB`.
@@ -153,6 +151,7 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 - `CUSTOM_FILENAME`: Add custom word to leeched file name.
 - `UPSTREAM_REPO`: Your github repository link, if your repo is private add `https://username:{githubtoken}@github.com/{username}/{reponame}` format. Get token from [Github settings](https://github.com/settings/tokens). So you can update your appllication from filled repository on each restart. **NOTE**: Any change in docker or requirements you need to deploy/build again with updated repo to take effect - DON'T delete .gitignore file. Read [this](https://github.com/anasty17/mirror-leech-telegram-bot/tree/master#upstream-repo-recommended) also.
 - `UPSTREAM_BRANCH`: Upstream branch for update. Empty means `master`.
+- `EXTENTION_FILTER`: File extentions that won't upload. Separate them by space.
 - `SHORTENER_API`: Fill your Shortener API key.
 - `SHORTENER`: Shortener URL.
   - Supported URL Shorteners:
@@ -181,7 +180,7 @@ Fill up rest of the fields. Meaning of each field is discussed below:
 ### 3. Getting Google OAuth API credential file and token.pickle
 
 **NOTES**
-- Old authentication changed, now we can't use bot to generate token.pickle. You need OS with a browser.
+- Old authentication changed, now we can't use bot or replit to generate token.pickle. You need OS with a browser.
 - You should set default browser. For linux refer to this [link](https://askubuntu.com/questions/609863/what-environment-variable-should-i-use-to-set-a-default-web-browser).
 - Windows users should install python3 and pip. You can find how to install them from google or from this [telegraph](https://telegra.ph/Create-Telegram-Mirror-Leech-Bot-by-Deploying-App-with-Heroku-Branch-using-Github-Workflow-12-06) from [Wiszky](https://github.com/vishnoe115) tutorial.
 
@@ -215,10 +214,9 @@ sudo docker container prune
 sudo docker image prune -a
 ```
 4. Check the number of processing units of your machine with `nproc` cmd and times it by 4, then edit `AsyncIOThreadsCount` in qBittorrent.conf.
-5. Use `anasty17/mltb-oracle:latest` for oracle or if u faced problem with arm64 docker run.
-   - Tutorial Video for Deploying on Oracle VPS:
-     - Thanks to [Wiszky](https://github.com/vishnoe115)
-     - No need to use sudo su, you can also use sudo before each cmd!
+5. Tutorial Video for Deploying on Oracle VPS:
+   - Thanks to [Wiszky](https://github.com/vishnoe115)
+   - No need to use sudo su, you can also use sudo before each cmd!
 <p><a href="https://youtu.be/IzUG7U7v4U4?t=968"> <img src="https://img.shields.io/badge/See%20Video-black?style=for-the-badge&logo=YouTube" width="160""/></a></p>
 
 ------
