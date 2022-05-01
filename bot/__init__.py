@@ -138,6 +138,13 @@ try:
         SUDO_USERS.add(int(chats))
 except:
     pass
+ try:
+    fx = getConfig('EXTENTION_FILTER')
+    fx = fx.split(' ')
+    for x in fx:
+        EXTENTION_FILTER.add('.' + x)
+except:
+    pass
 try:
     BOT_TOKEN = getConfig('BOT_TOKEN')
     parent_id = getConfig('GDRIVE_FOLDER_ID')
@@ -154,7 +161,7 @@ except KeyError as e:
     exit(1)
 
 LOGGER.info("Generating BOT_STRING_SESSION")
-app = Client('pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, no_updates=True)
+app = Client(name='pyrogram', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, bot_token=BOT_TOKEN, no_updates=True)
 
 try:
     USER_STRING_SESSION = getConfig('USER_STRING_SESSION')
@@ -164,7 +171,7 @@ except KeyError:
     USER_STRING_SESSION = None
 
 if USER_STRING_SESSION is not None:
-    rss_session = Client(USER_STRING_SESSION, api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH)
+    rss_session = Client(name='rss_session', api_id=int(TELEGRAM_API), api_hash=TELEGRAM_HASH, session_string=USER_STRING_SESSION)
 else:
     rss_session = None
 
@@ -186,6 +193,33 @@ def aria2c_init():
 if not ospath.isfile(".restartmsg"):
     sleep(1)
     Thread(target=aria2c_init).start()
+   
+try:
+    MEGA_KEY = getConfig('MEGA_API_KEY')
+    if len(MEGA_KEY) == 0:
+        raise KeyError
+except:
+    MEGA_KEY = None
+    LOGGER.info('MEGA_API_KEY not provided!')
+if MEGA_KEY is not None:
+    # Start megasdkrest binary
+    Popen(["megasdkrest", "--apikey", MEGA_KEY])
+    sleep(3)  # Wait for the mega server to start listening
+    mega_client = MegaSdkRestClient('http://localhost:6090')
+    try:
+        MEGA_USERNAME = getConfig('MEGA_EMAIL_ID')
+        MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
+        if len(MEGA_USERNAME) > 0 and len(MEGA_PASSWORD) > 0:
+            try:
+                mega_client.login(MEGA_USERNAME, MEGA_PASSWORD)
+            except mega_err.MegaSdkRestClientException as e:
+                log_error(e.message['message'])
+                exit(0)
+        else:
+            log_info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+    except:
+        log_info("Mega API KEY provided but credentials not provided. Starting mega in anonymous mode!")
+else:
     sleep(1.5)
 
 try:
@@ -210,22 +244,7 @@ try:
         STATUS_LIMIT = int(STATUS_LIMIT)
 except KeyError:
     STATUS_LIMIT = None
-try:
-    MEGA_API_KEY = getConfig('MEGA_API_KEY')
-    if len(MEGA_API_KEY) == 0:
-        raise KeyError
-except KeyError:
-    logging.warning('MEGA API KEY not provided!')
-    MEGA_API_KEY = None
-try:
-    MEGA_EMAIL_ID = getConfig('MEGA_EMAIL_ID')
-    MEGA_PASSWORD = getConfig('MEGA_PASSWORD')
-    if len(MEGA_EMAIL_ID) == 0 or len(MEGA_PASSWORD) == 0:
-        raise KeyError
-except KeyError:
-    logging.warning('MEGA Credentials not provided!')
-    MEGA_EMAIL_ID = None
-    MEGA_PASSWORD = None
+
 try:
     UPTOBOX_TOKEN = getConfig('UPTOBOX_TOKEN')
     if len(UPTOBOX_TOKEN) == 0:
