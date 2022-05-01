@@ -13,6 +13,7 @@ from time import sleep, time
 from threading import Thread, Lock
 from pyrogram import Client
 from dotenv import load_dotenv
+from megasdkrestclient import MegaSdkRestClient, errors as mega_err
 
 faulthandler.enable()
 
